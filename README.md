@@ -1,64 +1,60 @@
-# M&V Context Graph: Competent Counterfactual Framework
+# M&V Context Graph: Counterfactual Design
 
 ```mermaid
 graph TD
 
 %% === The Core Equation ===
-Impact["Reported Impact<br/>(kWh, therms, $)"]
-Actual["Actual Consumption<br/>(Reporting Period)"]
+Impact["Reported Impact"]
+Actual["Actual Consumption"]
 Counterfactual["Counterfactual<br/>(Adjusted Baseline)"]
 
-%% === Counterfactual Construction ===
-BaselineEvidence["Baseline Evidence<br/>(observed conditions + consumption)"]
-Inference["Inference from Evidence"]
-Model["Model / Ruleset<br/>(statistical or physical)"]
+%% === Counterfactual Design ===
+Design["Counterfactual Design"]
 
-%% === Period Definitions ===
-Baseline["Baseline Period Definition"]
-Reporting["Reporting Period Definition"]
-Boundary["Measurement Boundary"]
+%% === Primary Dimensions ===
+Boundary["Boundary<br/>(what's measured)"]
+Duration["Duration<br/>(baseline + reporting periods)"]
+ModelType["Model Type<br/>(statistical, physical, blend)"]
+
+%% === Evidence & Inference ===
+BaselineEvidence["Baseline Evidence"]
+Inference["Inference from Evidence"]
+
+%% === Secondary Dimensions ===
+Vars["Independent Variables"]
+AdjRules["Adjustment Rules"]
 
 %% === Adjustments ===
-RoutineAdj["Routine Adjustments<br/>(weather, production, occupancy)"]
-NonRoutineAdj["Non-Routine Adjustments<br/>(conditions with no baseline analog)"]
-
-%% === Independent Variables ===
-Vars["Independent Variables"]
-Weather["Weather Data<br/>(station + normalization method)"]
-Production["Production / Occupancy"]
+RoutineAdj["Routine Adjustments<br/>(within evidentiary basis)"]
+NonRoutineAdj["Non-Routine Adjustments<br/>(beyond evidentiary basis)"]
 
 %% === Data Layer ===
 Meters["Meter Data"]
 BAS["BAS/EMS Trends"]
-Invoices["Utility Bills"]
-QAQC["Data QA/QC Rules"]
+Weather["Weather Data"]
+QAQC["Data QA/QC"]
 
-%% === Provenance Layer ===
-DataProvenance["Data Provenance + Lineage"]
-ParamProvenance["Parameter Provenance<br/>(calibration choices documented)"]
-Docs["Evidence Package<br/>(M&V Plan, As-builts, O&M logs)"]
+%% === Provenance ===
+DataProvenance["Data Provenance"]
+ParamProvenance["Parameter Provenance"]
+Docs["Evidence Package"]
 
-%% === Calibration & Validation ===
-StatTests["Statistical Tests<br/>(CVRMSE, NMBE, residuals)"]
-CalibProcess["Calibration Process<br/>(transparent, repeatable)"]
-PhysicalPlausibility["Physical Plausibility Check"]
+%% === Validation ===
+StatTests["Statistical Fit"]
+PhysicalPlausibility["Physical Plausibility"]
+Calibration["Calibration Process"]
 
 %% === Three Types of Uncertainty ===
-EpistemicUnc["Epistemic Uncertainty<br/>(reducible with more data/analysis)"]
-AleatoricUnc["Aleatoric Uncertainty<br/>(inherent variability, quantifiable)"]
-OntologicalUnc["Ontological Uncertainty<br/>(no evidence exists — judgment required)"]
+EpistemicUnc["Epistemic Uncertainty<br/>(reducible)"]
+AleatoricUnc["Aleatoric Uncertainty<br/>(inherent variability)"]
+OntologicalUnc["Ontological Uncertainty<br/>(no evidence exists)"]
 
-%% === Judgment Layer ===
-Competence["Competent Counterfactual Assessment"]
-Defensibility["Defensibility<br/>(Would a qualified reviewer agree?)"]
-Sensitivity["Sensitivity Analysis<br/>(What assumptions matter most?)"]
-
-%% === Governance ===
-Stake["Stakeholders<br/>(Owner, ESCO, Evaluator, Utility, Regulator)"]
-Protocol["Protocol / Ruleset<br/>(IPMVP option + local requirements)"]
-Roles["Roles & Responsibilities"]
-Signoff["Review + Sign-off"]
-Dispute["Dispute / Change Control"]
+%% === Judgment & Agreement ===
+Competence["Competent Counterfactual"]
+Defensibility["Defensibility"]
+Sensitivity["Sensitivity Analysis"]
+Stakeholders["Stakeholder Agreement"]
+Signoff["Sign-off"]
 
 %% ========== RELATIONSHIPS ==========
 
@@ -67,121 +63,135 @@ Impact --> Actual
 Impact --> Counterfactual
 Actual -. "minus" .-> Counterfactual
 
-%% Actual measurement path
-Actual --> Meters
-Actual --> Reporting
-Actual --> Boundary
-
-%% Counterfactual construction (inference from evidence)
+%% Counterfactual built from design
+Counterfactual --> Design
 Counterfactual --> Inference
-Inference --> BaselineEvidence
-Inference --> Model
 Counterfactual --> RoutineAdj
 Counterfactual --> NonRoutineAdj
 
-%% Baseline evidence
-BaselineEvidence --> Baseline
-BaselineEvidence --> Meters
-BaselineEvidence --> Vars
+%% Primary dimensions define the design
+Design --> Boundary
+Design --> Duration
+Design --> ModelType
 
-%% Routine adjustments (within evidentiary basis)
-RoutineAdj --> Model
-RoutineAdj --> Vars
-Vars --> Weather
-Vars --> Production
-RoutineAdj --> EpistemicUnc
-RoutineAdj --> AleatoricUnc
+%% Primary dimensions constrain secondary
+Boundary --> Vars
+Duration --> BaselineEvidence
+ModelType --> AdjRules
+ModelType --> Calibration
 
-%% Non-routine adjustments (beyond evidentiary basis)
-NonRoutineAdj --> OntologicalUnc
-OntologicalUnc --> Defensibility
-OntologicalUnc --> Stake
+%% Inference from evidence
+Inference --> BaselineEvidence
+Inference --> ModelType
+BaselineEvidence --> Duration
 
-%% Data sources
+%% Secondary dimensions
+Vars --> RoutineAdj
+AdjRules --> RoutineAdj
+AdjRules --> NonRoutineAdj
+
+%% Data flows
+Boundary --> Meters
 Meters --> QAQC
 BAS --> QAQC
-Invoices --> QAQC
 Weather --> QAQC
-
-%% Provenance chains
+Weather --> Vars
 QAQC --> DataProvenance
-CalibProcess --> ParamProvenance
-DataProvenance --> Docs
-ParamProvenance --> Docs
+DataProvenance --> BaselineEvidence
 
 %% Calibration & validation
-Model --> CalibProcess
-CalibProcess --> StatTests
-CalibProcess --> PhysicalPlausibility
+Calibration --> StatTests
+Calibration --> PhysicalPlausibility
+Calibration --> ParamProvenance
 StatTests -.-> Competence
 PhysicalPlausibility -.-> Competence
 
-%% Uncertainty quantification
+%% Provenance to documentation
+ParamProvenance --> Docs
+DataProvenance --> Docs
+
+%% Uncertainty by type
+RoutineAdj --> EpistemicUnc
+RoutineAdj --> AleatoricUnc
+NonRoutineAdj --> OntologicalUnc
+
+%% Uncertainty flows to impact
 EpistemicUnc --> Impact
 AleatoricUnc --> Impact
 OntologicalUnc -.-> Impact
+
+%% Ontological requires agreement
+OntologicalUnc --> Stakeholders
 
 %% Judgment layer
 Competence --> Defensibility
 Competence --> Sensitivity
 Sensitivity --> EpistemicUnc
+Docs --> Defensibility
 
 %% Governance
-Protocol --> Model
-Protocol --> RoutineAdj
-Protocol --> NonRoutineAdj
-Stake --> Roles
-Roles --> Signoff
+Stakeholders --> Signoff
+Defensibility --> Signoff
 Signoff --> Impact
-Dispute --> NonRoutineAdj
-Docs --> Signoff
-Docs --> Defensibility
 ```
 
-## Key Concepts
+## Counterfactual Design
 
-### The Fundamental Equation
-**Impact = Actual − Counterfactual**
+A counterfactual is not discovered — it is **designed**. The design choices determine what claims can be made and how defensible they are.
 
-The counterfactual (adjusted baseline) is *constructed through inference*, not measured.
+### Primary Dimensions
 
-### Inference from Evidence
-The counterfactual is built from:
-- **Baseline evidence**: Observed conditions and consumption during a defined period
-- **Model/ruleset**: Systematic method for projecting that evidence into reporting period conditions
+| Dimension | Question |
+|-----------|----------|
+| **Boundary** | What is inside/outside the measurement fence? |
+| **Duration** | How long is the baseline? The reporting period? |
+| **Model Type** | Statistical, physical simulation, or blend? |
 
-This is legitimate inference — we have evidence, we apply rules.
+These are the fundamental choices. Everything else is constrained by them.
 
-### Three Types of Uncertainty
+### Secondary Dimensions
 
-| Type | Source | Character |
-|------|--------|-----------|
-| **Epistemic** | Incomplete analysis of available evidence | Reducible with effort |
-| **Aleatoric** | Inherent system variability | Quantifiable, not reducible |
-| **Ontological** | Conditions in reporting period have no baseline analog | No evidence exists — requires judgment |
+- **Independent variables**: What factors explain consumption variation?
+- **Adjustment rules**: How are baseline conditions projected into reporting conditions?
 
-### Where Ontological Uncertainty Lives
-**Non-routine adjustments** are the boundary where inference from evidence ends.
+These flow from the primary dimensions — boundary determines what data you need, duration determines your evidentiary basis, model type determines how projection works.
 
-When something occurs in the reporting period that was *not part of the baseline evidence* — new equipment, changed use, different occupancy patterns, a pandemic — we have no evidentiary basis for the counterfactual under those conditions.
+## Inference and Its Limits
 
-This is not "harder to estimate." It is a fundamentally different epistemic status: we are making claims about a world-state for which *no direct evidence exists*.
+The counterfactual is built through **inference from evidence**:
+- Baseline evidence: observed conditions and consumption
+- Model: systematic rules for projection
 
-### Why This Matters
-- **Routine adjustments**: Governed by models and rules. Defensible through statistical tests and physical plausibility.
-- **Non-routine adjustments**: Governed by *stakeholder agreement*. Defensibility requires transparency about the judgment being made.
+This works for **routine adjustments** — conditions that vary within the range of baseline evidence (weather, occupancy, production).
 
-This is where M&V disputes actually live — not in the statistics, but in the non-routines.
+## Ontological Uncertainty
 
-### Competent Counterfactual
-A counterfactual is "competent" when:
-1. Inference from evidence is sound (statistical + physical plausibility)
-2. Ontological uncertainty is acknowledged and bounded
-3. Stakeholders agree on the judgment calls
-4. The whole chain is documented and defensible
+When something occurs in the reporting period that has **no analog in the baseline evidence**, inference from evidence ends.
 
-## How to Read This Graph
+This is **ontological uncertainty** — not reducible through better analysis, not quantifiable through statistics. The counterfactual under these conditions *does not exist* as a discoverable fact.
 
-- **Solid arrows** (→): Data flow or direct dependency
-- **Dashed arrows** (⇢): Judgment, inference, or propagation of uncertainty
-- **Ontological uncertainty** connects directly to stakeholders — because that's where agreement must be reached
+Non-routine adjustments live here. They require **stakeholder agreement**, not just technical analysis.
+
+## Three Types of Uncertainty
+
+| Type | Character | Lives in |
+|------|-----------|----------|
+| **Epistemic** | Reducible with more data/analysis | Model fit, data quality |
+| **Aleatoric** | Inherent variability, quantifiable | Weather, occupancy variation |
+| **Ontological** | No evidence exists | Non-routine adjustments |
+
+## Competent Counterfactual
+
+A counterfactual is competent when:
+1. Design choices are explicit and justified
+2. Inference from evidence is sound
+3. Ontological uncertainty is acknowledged
+4. Stakeholders agree on judgment calls
+5. The whole chain is documented
+
+## Reading the Graph
+
+- **Solid arrows** (→): Data flow or constraint
+- **Dashed arrows** (⇢): Judgment or uncertainty propagation
+- Primary dimensions sit at the top — they shape everything downstream
+- Ontological uncertainty connects to stakeholders, not just to impact
