@@ -1,1 +1,37 @@
-
+nodes:
+  - id: impact
+    label: "Reported Impact"
+    type: outcome
+  - id: model
+    label: "Reporting Model Spec"
+    type: method
+  - id: baseline
+    label: "Baseline Period Definition"
+    type: definition
+  - id: reporting
+    label: "Reporting Period Definition"
+    type: definition
+  - id: boundary
+    label: "Measurement Boundary"
+    type: definition
+  - id: adj
+    label: "Adjustments"
+    type: method
+  - id: vars
+    label: "Independent Variables"
+    type: data
+  - id: meters
+    label: "Meter Data"
+    type: data
+  - id: weather
+    label: "Weather Data"
+    type: data
+  - id: qaqc
+    label: "Data QA/QC Rules"
+    type: governance
+  - id: protocol
+    label: "Protocol / Ruleset"
+    type: governance
+  - id: signoff
+    label: "Review + Sign-off"
+    type: governance
