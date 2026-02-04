@@ -1,4 +1,4 @@
-# MnV_context_graph
+<img width="1375" height="1139" alt="image" src="https://github.com/user-attachments/assets/df8ecf98-7ed5-4470-8cf6-8c67afd95513" /><img width="1375" height="1139" alt="image" src="https://github.com/user-attachments/assets/df8ecf98-7ed5-4470-8cf6-8c67afd95513" /># MnV_context_graph
 
 Test of concept
 
@@ -69,8 +69,8 @@ Roles --> Signoff
 Signoff --> Impact
 Dispute --> Adj
 Dispute --> Model
-Docs --> Signoff
-```
+Docs --> Signoff ```
+
 
 ## How to read this graph
 
