@@ -1,1 +1,22 @@
-
+edges:
+  - from: impact
+    to: model
+    relation: computed_by
+  - from: impact
+    to: boundary
+    relation: bounded_by
+  - from: model
+    to: baseline
+    relation: trained_on
+  - from: model
+    to: reporting
+    relation: applied_to
+  - from: model
+    to: vars
+    relation: uses
+  - from: protocol
+    to: model
+    relation: constrains
+  - from: signoff
+    to: impact
+    relation: approves
